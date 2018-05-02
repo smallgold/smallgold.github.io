@@ -1,4 +1,4 @@
-var cacheStorageKey = "pwa";
+﻿var cacheStorageKey = "pwa";
 
 var cacheList = ['/', 'index.html','icon.png'];
 
@@ -13,12 +13,12 @@ self.addEventListener('install', function (e) {
 })
 
 self.addEventListener('fetch', function (e) {
-  e.repondWith(
+  e.respondWith(
     caches.match(e.request).then(function (response) {
       if (response != null) {
         return response;
       }
-      return fetch(e.reponse.url);
+      return fetch(e.response);
     })
   )
 })
