@@ -1,1 +1,1 @@
-﻿document.getElementsByTagName('p')[0].innerHTML="test"
+document.getElementsByTagName('p')[0].innerHTML="test"
