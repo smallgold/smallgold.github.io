@@ -1,0 +1,73 @@
+<html>
+
+<head>
+    <title>剪贴板</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        body,
+        select {
+            font-size: 9pt;
+            font-family: Verdana;
+        }
+
+        a {
+            color: red;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <p>这是一些文字1</p>
+    <p>这是一些文字2</p>
+    <p>这是一些文字3</p>
+    <p>这是一些文字4</p>
+    <p>这是一些文字5</p>
+    <p>这是一些文字6</p>
+    <textarea id="txt"></textarea>
+    <script type="text/javascript">
+        var txt = document.getElementById('txt');
+        var data = null;
+        var dataStr = null;
+        document.body.oncopy = function (e) { //copy事件
+            var selection = getSelection();
+            var range = selection.getRangeAt(0);
+            var clipboardData = window.clipboardData; //for IE
+            if (!clipboardData) { // for chrome
+                clipboardData = e.clipboardData;
+            }
+            //可以获取用户选中复制的数据
+            data = range.commonAncestorContainer.innerText 
+
+            clipboardData.setData('Text', data + '6666666' );
+            return false; // 阻止剪贴板未修改的内容 
+        }
+        txt.onfocus = function (e) {
+            dataStr = e.target.value;
+        }
+        txt.oninput = function (e) {
+            dataStr = e.target.value;
+        }
+        txt.onpaste = function (e) { //paste事件
+            var clipboardData = window.clipboardData; // IE
+            if (!clipboardData) { //chrome
+                clipboardData = e.clipboardData
+            }
+            data = clipboardData.getData('Text').replace(/(\n\r)|(\r)/g, '').replace(/(\n\n)|(\n)|(\r)/g, ',');
+            if (!dataStr || dataStr[dataStr.length-1].indexOf(',') == 0) {
+                dataStr = dataStr + data.substring(0, data.length - 1);
+            } else {
+                dataStr = dataStr + ',' + data.substring(0, data.length - 1);
+            }
+            console.log(dataStr)
+            e.target.value = dataStr
+            return false; // 阻止剪贴板未修改的内容 
+        }
+    </script>
+</body>
+
+</html>

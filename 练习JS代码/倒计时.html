@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>剩余时间:</h2>
+    <div id="timer"></div>
+    <script language="javascript" type="text/javascript">
+        // 时间戳转时间
+        /* function timestampToTime(timestamp) {
+            var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            Y = date.getFullYear() + '-';
+            M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+            D = date.getDate() + ' ';
+            h = date.getHours() + ':';
+            m = date.getMinutes() + ':';
+            s = date.getSeconds();
+            return Y + M + D + h + m + s;
+        } */
+        // timestampToTime(1403058804);
+        // console.log(timestampToTime(1403058804)); //2014-06-18 10:33:24
+
+
+        // 时间转时间戳
+        // var date = new Date('2014-06-17 18:55:49:123');
+        // 有三种方式获取
+        // var time1 = date.getTime();
+        // var time2 = date.valueOf();
+        // var time3 = Date.parse(date);
+        // console.log(time1);//1398250549123
+        // console.log(time2);//1398250549123
+        // console.log(time3);//1398250549000
+
+        // 倒计时
+        function leftTimer(startTime, endTime) {
+            var leftTime = endTime - startTime;                         //计算剩余的毫秒数 
+            var days = parseInt(leftTime / 1000 / 60 / 60 / 24, 10);    //计算剩余的天数 
+            var hours = parseInt(leftTime / 1000 / 60 / 60 % 24, 10);   //计算剩余的小时 
+            var minutes = parseInt(leftTime / 1000 / 60 % 60, 10);      //计算剩余的分钟 
+            var seconds = parseInt(leftTime / 1000 % 60, 10);           //计算剩余的秒数 
+            hours = checkTime(days * 24 + hours);
+            minutes = checkTime(minutes);
+            seconds = checkTime(seconds);
+            document.getElementById("timer").innerHTML = hours + "小时" + minutes + "分" + seconds + "秒";
+        }
+
+        function checkTime(i) { //将0-9的数字前面加上0，例1变为01 
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+        var date1 = new Date('2014-06-17 18:55:49:123');
+        var date2 = new Date('2014-06-18 10:33:24:123');
+
+        var startTime = Date.parse(date1);
+        var endTime = Date.parse(date2);
+
+        leftTimer(startTime, endTime);
+        setInterval(function () {
+            startTime += 1000;
+            leftTimer(startTime, endTime);
+        }, 1000);
+
+    </script>
+</body>
+
+</html>

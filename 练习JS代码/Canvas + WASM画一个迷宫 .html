@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>HTML5音频可视化频谱跳动代码 </title>
+</head>
+
+<body class="keBody">
+    <canvas id="wrap" height="800" width="800"></canvas>
+    <script>
+        var wrap = document.getElementById("wrap");
+        var cxt = wrap.getContext("2d");
+        (function drawSpectrum() {
+            cxt.clearRect(0, 0, wrap.width, wrap.height);
+            //画线条 
+            for (var i = 0; i < 360; i++) {
+                var value = 8;
+                cxt.beginPath();
+                cxt.lineWidth = 2;
+                cxt.moveTo(300, 300);
+                //R * cos (PI/180*一次旋转的角度数) ,-R * sin (PI/180*一次旋转的角度数) 
+                cxt.lineTo(Math.cos((i * 1) / 180 * Math.PI) * (200 + value) + 300, (-Math.sin((i * 1) / 180 * Math
+                    .PI) * (200 + value) + 300));
+                cxt.stroke();
+            }
+            //画一个小圆，将线条覆盖 
+            cxt.beginPath();
+            cxt.lineWidth = 1;
+            cxt.arc(300, 300, 200, 0, 2 * Math.PI, false);
+            cxt.fillStyle = "#fff";
+            cxt.stroke();
+            cxt.fill();
+        })();
+    </script>
+
+
+
+</body>
+
+</html>

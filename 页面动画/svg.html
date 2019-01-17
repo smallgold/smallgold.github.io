@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <svg width="100%" height="100%" version="1.1">
+        <rect width="300" height="100" style="fill:rgb(0,0,255); stroke-width:1; stroke:rgb(0,0,0)" />
+    </svg>
+    <svg width="100%" height="270" version="1.1">
+        <rect x="20" y="20" width="250" height="250" style="fill:blue;stroke:pink;stroke-width:5; fill-opacity:0.1;stroke-opacity:0.9"
+        />
+    </svg>
+    <svg width="100%" height="100%" version="1.1">
+        <rect x="20" y="20" rx="20" ry="20" width="250" height="100" style="fill:red;stroke:black;stroke-width:5;opacity:0.5" />
+    </svg>
+    <svg width="100%" height="100%" version="1.1">
+        <circle cx="100" cy="50" r="40" stroke="black" stroke-width="2" fill="red" />
+    </svg>
+    <svg width="440" height="440">
+        <circle cx="220" cy="220" r="170" stroke-width="50" stroke="#D1D3D7" fill="none"></circle>
+        <circle id="ccc" cx="220" cy="220" r="170" stroke-width="50" stroke="#00A5E0" fill="none" transform="matrix(0,-1,1,0,0,440)"
+            stroke-dasharray="0 1069"></circle>
+    </svg>
+    <p>拖我：
+        <input id="range" type="range" min="0" max="100" value="0" style="width:300px;">
+    </p>
+    <script>
+        if (window.addEventListener) {
+            var range = document.querySelector("#range");
+            var circle = document.querySelector("#ccc");
+            var time;       // 清除定时器用
+            var num = 0;    // 设置初始化位置
+            var speed = 5;  // 动画速度
+            var times = 10; // 定时器速度
+
+            if (range && circle) {
+                range.addEventListener("change", function () {
+                    var percent = this.value / 100;      // 移动距离百分比
+                    var perimeter = Math.PI * 2 * 170;   // 旋转角度
+                    var rotate = Math.floor(perimeter * percent); // 计算旋转距离
+                    
+                    clearInterval(time);
+                    
+                    time = setInterval(function () {
+                        // 起始位置大于初始位置则增加，否则减少
+                        if (num - rotate >= 0) {
+                            num -= speed;
+                            if (num <= rotate) {
+                                // 运动完成后，设置下次初始化位置
+                                num = rotate;
+                                clearInterval(time);
+                            }
+                        } else {
+                            num += speed;
+                            if (num >= rotate) {
+                                // 运动完成后，设置下次初始化位置
+                                num = rotate;
+                                clearInterval(time);
+                            }
+                        }
+                        circle.setAttribute('stroke-dasharray', num + " 1069"); /* + perimeter * (1- percent)*/ 
+                    }, times)
+
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

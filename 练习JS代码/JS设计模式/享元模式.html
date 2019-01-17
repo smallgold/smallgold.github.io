@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>享元模式</title>
+</head>
+
+<body>
+    <div id="results"></div>
+    <script>
+        /**
+         * 运行共享技术有效的支持大量的细粒度的对像，避免大量拥有相同内容的小类开销(如耗费内存)，使大家共享一个类(元类)。
+         * 享元模式可以避免大量非常相似类的开销，在程序设计中，有时需要生产大量细粒度的类实例来表示数据，
+         * 如果能发现这些实例除了几个参数外，开销基本相同的话，就可以大幅度减少需要实例化的类的数量。如果能把那些参数移动到类实例的外面，
+         * 在方法调用的时候将他们传递进来，就可以通过共享大幅度减少单个实例的数量。
+         * 
+         * 在数据层上：应用在内存里大量相似的对象上；
+         * 在dom层上：应用在中央事件管理器上用来避免给父容器里面每个子元素都附加事件句柄。
+         * 
+         * 两个重要概念 -- 内部状态intrinsic和外部状态extrinsic之分，内部状态就是在对象里通过内部方法管理，而外部信息可以通过外部删除或者保存。
+         * 说白点，就是先捏一个原始模型，然后随着不同场合和环境，再生产各具特征的具体模型，很显然，在这里要产生不同的新对象。
+         * 所以享元模式中经常出现工厂模式，享元模式内部状态是用来共享的，享元工厂负责维护一个享元模式池来存放内部状态的对象。
+         */
+        // 例子
+        // 通过一个类库让系统来管理所有的书籍，每个书籍的元数据暂定为如下内容
+        // ID, Title, Author, Genre, Page count, Publisher ID, ISBN
+        // 定义每本书被借出去的时间和借书人，以及退书日期和是否可用状态
+        // checkoutDate, checkoutMember, dueReturnDate, availability
+        // 未优化
+        var book1 = function (id, title, author, genre, pageCount, publisherID, ISBN, checkoutDate, checkoutMember,
+            dueReturnDate, availability) {
+            this.id = id;
+            this.title = title;
+            this.author = author;
+            this.genre = genre;
+            this.pageCount = pageCount;
+            this.publisherID = publisherID;
+            this.ISBN = ISBN;
+            this.checkoutDate = checkoutDate;
+            this.checkoutMember = checkoutMember;
+            this.dueReturnDate = dueReturnDate;
+            this.availability = availability;
+        }
+        book1.prototype = {
+            getTitle: function () {
+                return this.title;
+            },
+            getAuthor: function () {
+                return this.author;
+            },
+            getGenre: function () {
+                return this.genre;
+            },
+            getPageCount: function () {
+                return this.pageCount;
+            },
+            getPublisherID: function () {
+                return this.publisherID;
+            },
+            getISBN: function () {
+                return this.ISBN;
+            },
+            getCheckoutDate: function () {
+                return this.checkoutDate;
+            },
+            getCheckoutMember: function () {
+                return this.checkoutMember;
+            },
+            getDueReturnDate: function () {
+                return this.dueReturnDate;
+            },
+            getAvailability: function () {
+                return this.availability;
+            },
+            // 更新借出状态
+            updateCheckoutStatus: function (bookID, newStatus, checkoutDate, checkoutMember, newReturnDate) {
+                this.id = bookID;
+                this.availability = newStatus;
+                this.checkoutDate = checkoutDate;
+                this.checkoutMember = checkoutMember;
+                this.dueReturnDate = newReturnDate;
+            },
+            //续借
+            extendCheckoutPeriod: function (bookID, newReturnDate) {
+                this.id = bookID;
+                this.dueReturnDate = newReturnDate;
+            },
+            //是否到期
+            isPastDue: function (bookID) {
+                var currentDate = new Date();
+                return currentDate.getTime() > Date.parse(this.dueReturnDate);
+            }
+        }
+        // 随着时间的增加，图书可能大批量增加，并且每种图书都有不同的版本和数量，你将会发现系统变得越来越慢
+
+        // 优化
+        var Book = function (title, author, genre, pageCount, publisherID, ISBN) {
+            this.title = title;
+            this.author = author;
+            this.genre = genre;
+            this.pageCount = pageCount;
+            this.publisherID = publisherID;
+            this.ISBN = ISBN;
+        };
+        /* Book工厂 单例 */
+        var BookFactory = function () {
+            var existingBooks = {};
+            return {
+                createBook: function (title, author, genre, pageCount, publisherID, ISBN) {
+                    /*查找之前是否创建*/
+                    var existingBook = existingBooks[ISBN];
+                    if (existingBook) {
+                        return existingBook;
+                    } else {
+                        /* 如果没有，就创建一个，然后保存*/
+                        var book = new Book(title, author, genre, pageCount, publisherID, ISBN);
+                        existingBooks[ISBN] = book;
+                        return book;
+                    }
+                }
+            }
+        };
+
+        /*BookRecordManager 借书管理类 单例*/
+        var BookRecordManager = (function () {
+            var bookRecordDatabase = {};
+            return {
+                /*添加借书记录*/
+                addBookRecord: function (id, title, author, genre, pageCount, publisherID, ISBN, checkoutDate,
+                    checkoutMember, dueReturnDate, availability) {
+                    var book = bookFactory.createBook(title, author, genre, pageCount, publisherID, ISBN);
+                    bookRecordDatabase[id] = {
+                        checkoutMember: checkoutMember,
+                        checkoutDate: checkoutDate,
+                        dueReturnDate: dueReturnDate,
+                        availability: availability,
+                        book: book,
+                    };
+                },
+                updateCheckoutStatus: function (bookID, newStatus, checkoutDate, checkoutMember, newReturnDate) {
+                    var record = bookRecordDatabase[bookID];
+                    record.availability = newStatus;
+                    record.checkoutDate = checkoutDate;
+                    record.checkoutMember = checkoutMember;
+                    record.dueReturnDate = newReturnDate;
+                },
+                extendCheckoutPeriod: function (bookID, newReturnDate) {
+                    bookRecordDatabase[bookID].dueReturnDate = newReturnDate;
+                },
+                isPastDue: function (bookID) {
+                    var currentDate = new Date();
+                    return currentDate.getTime() > Date.parse(bookRecordDatabase[bookID].dueReturnDate);
+                }
+            };
+        });
+
+        /**
+         * 享元模式是一个提高程序效率和性能的模式，会大大加快程序的运行速度，引用场合很多，
+         * 比如你要从一个数据库中读取一系列字符串，这些字符串中有许多是重复的，那么我们可以将这些字符串储存在享元的模式池中
+         */
+    </script>
+</body>
+
+</html>

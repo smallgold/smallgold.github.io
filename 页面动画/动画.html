@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title> new document </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        .cart {
+            position: absolute;
+            top: 100vh;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: red;
+            transition: all .3s;
+        }
+        .btn {
+            position: relative;
+            z-index: 99;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cart"></div>
+    <button class="btn" onclick="click1()">click</button>
+    <script>
+        var show = false;
+        function click1 () {
+            var div = document.getElementsByTagName('div')[0]
+            if (show) {
+                show = false;
+                div.style.top = '100vh';
+            } else {
+                show = true;
+                div.style.top = 0;
+            }
+        }
+    </script>
+</body>
+</html>

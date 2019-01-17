@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>中介者模式</title>
+</head>
+
+<body>
+    <div id="results"></div>
+    <script>
+        /**
+         * 用一个中介对象来封装一系列的对象交互。
+         * 中介者使个对象不需要显示的相互引用，从而使其耦合松散，
+         * 而且可以独立的改变它们之间的交互
+         */
+        // 例子
+        function Player(name) {
+            this.points = 0;
+            this.name = name;
+        }
+        Player.prototype.play = function () {
+            this.points += 1;
+            mediator.played();
+        };
+        var scoreboard = {
+
+            // 显示内容的容器
+            element: document.getElementById('results'),
+
+            // 更新分数显示
+            update: function (score) {
+                var i, msg = '';
+                for (i in score) {
+                    if (score.hasOwnProperty(i)) {
+                        msg += '<p><strong>' + i + '<\/strong>: ';
+                        msg += score[i];
+                        msg += '<\/p>';
+                    }
+                }
+                this.element.innerHTML = msg;
+            }
+        };
+
+        var mediator = {
+
+            // 所有的player
+            players: {},
+
+            // 初始化
+            setup: function () {
+                var players = this.players;
+                players.home = new Player('Home');
+                players.guest = new Player('Guest');
+            },
+
+            // play以后，更新分数
+            played: function () {
+                var players = this.players,
+                    score = {
+                        Home: players.home.points,
+                        Guest: players.guest.points
+                    };
+
+                scoreboard.update(score);
+            },
+
+            // 处理用户按键交互
+            keypress: function (e) {
+                e = e || window.event; // IE
+                if (e.which === 49) { // 数字键 "1"
+                    mediator.players.home.play();
+                    return;
+                }
+                if (e.which === 48) { // 数字键 "0"
+                    mediator.players.guest.play();
+                    return;
+                }
+            }
+        };
+
+        // go!
+        mediator.setup();
+        window.onkeypress = mediator.keypress;
+
+        // 30秒以后结束
+        setTimeout(function () {
+            window.onkeypress = null;
+            console.log('Game over!');
+        }, 30000);
+        /**
+         * 中介者和观察者：
+         * 观察者模式，没有封装约束单个对象，相反，观察者observer和具体类subject是一起配合来维护约束的，
+         * 沟通是通过多个观察者和多个具体来交互的：每个具体类通常包括多个观察者，而有时候具体类里面一个观察者也是另一个观察者的具体类。
+         * 中介者模式，所做的不是简单的分发，却是扮演着维护这些约束的职责。
+         * 
+         * 中介者和外观模式：
+         * 他们都是对现有各模块进行抽象，但是又有一些微妙的区别。
+         * 中介者所做的可能是在模块直接进行通信，是多向的，但外观模式只是为某一个模块或者系统定义简单的接口而不添加额外的功能。
+         * 系统中的其它模块和外观模式这个概念没有直接联系，可以认为是单向的。
+         * 
+         * 中介者模式：一般应用于一组对象已定义良好但是以复杂的方式进行通信的场合，
+         * 一般情况下，中介者模式很容易在系统中使用，但也容易在系统中误用，当系统出现了多对多交互复杂的对象群时，
+         * 先不要急于使用中介者模式，而是要思考一下是不是系统设计有问题。
+         */
+    </script>
+</body>
+
+</html>

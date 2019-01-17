@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>数组对象去重</title>
+</head>
+<body>
+<script>
+var arr1 = [
+    { id: 0, name: 'a' },
+    { id: 1, name: 'a' },
+    { id: 2, name: 'a' },
+    { id: 3, name: 'b' },
+    { id: 4, name: 'b' },
+]
+var arr2 = [
+    { id: 0, name: 'a' },
+    { id: 1, name: 'b' },
+    { id: 2, name: 'a' },
+    { id: 3, name: 'b' },
+    { id: 4, name: 'b' },
+]
+
+// 去除单个key值相同对象
+function unique1(arr, key) {
+    var len = arr.length;
+    var list = [];
+    var obj = {}
+    for (var i=0; i<len; i++) {
+        if (!obj[arr[i][key]]) {
+            obj[arr[i][key]] = 1
+            list.push(arr[i][key])
+        }
+    }
+    console.log(list)
+    return list
+}
+
+// unique1(arr1, 'name')
+
+// 2个数组的交集
+function unique2(arr1, arr2) {
+    var list = [];
+    for(var i = 0; i< arr1.length; i++) { 
+        if ( JSON.stringify(arr2).indexOf(JSON.stringify(arr1[i])) == -1 ) { 
+            list.push(arr1[i]); 
+        } 
+    }
+    console.log(list)
+    return list
+}
+
+// unique2(arr1, arr2)
+
+// 2个数组的差集
+function unique3(arr1, arr2) {
+    var list = [];
+    for(var i = 0; i< arr1.length; i++) { 
+        if ( JSON.stringify(arr2).indexOf(JSON.stringify(arr1[i])) > -1 ) { 
+            list.push(arr1[i]); 
+        } 
+    }
+    console.log(list)
+    return list
+}
+
+unique3(arr1, arr2)
+
+</script> 
+</body>
+</html>

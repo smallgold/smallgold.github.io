@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>own react</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        function getBase64Image(img) { // 获取图片url 转成 base64;
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+            var dataURL = canvas.toDataURL("image/jpg");
+            return dataURL;
+        }
+
+        function dataURLtoBlob(b64) { // 获取图片base64 转成 blob;
+            var arr = b64.split(','),
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], {
+                type: "image/jpg"
+            });
+        }
+
+        // 新建图片对象 然后加载;
+        var imgLink = "图片url";
+        var img = new Image();
+        img.src = imgLink;
+        img.crossOrigin = "*";
+        img.onload = function () {
+            var base64 = getBase64Image(img);
+            var formData = new FormData(); // 新建文件对象;
+            formData.append("image", dataURLtoBlob(base64), "666.jpg");
+            var xhr = new XMLHttpRequest(); // 新建ajax对象;
+            xhr.open('POST', '上传地址', true);
+            xhr.send(formData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    //  回调函数
+                    var res = JSON.parse(xhr.response)
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

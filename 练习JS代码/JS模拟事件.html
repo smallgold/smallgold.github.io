@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>DragToReplaceDeom</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        function mouseMove(x, y, node) {
+            const doc = node ? node.ownerDocument : document;
+            const evt = doc.createEvent('MouseEvents');
+            evt.initMouseEvent('mousemove', true, true, window,
+                0, 0, 0, x, y, false, false, false, false, 0, null);
+            doc.dispatchEvent(evt);
+            return evt;
+        }
+    </script>
+</body>
+
+</html>

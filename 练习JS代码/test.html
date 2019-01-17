@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title></title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        class CreatSourse {
+            constructor(props) {
+                console.log(props)
+                this.options = props
+                this.options.parseData(333)
+            }
+            read(data) {
+            }
+            setState(data) {
+            }
+            setRequest(data) {
+            }
+            getData() {
+            }
+            getItemData(idx) {
+            }
+        }
+
+        class LocalSource {
+            constructor() {
+                console.log('啦啦啦，今天天气好晴朗') // 当实例化对象时该行代码会执行。
+            }
+        }
+
+        function DataSource(options) {
+            
+            if (options.transport) {
+                return new CreatSourse(options)
+            } else {
+                return new LocalSource(options)
+            }
+        }
+        var dd = DataSource({
+            transport: {
+                name: '123',
+                data: {
+                    keyword: '222'
+                }
+            },
+            parseData: function (d) {
+                this.aaa = '111'
+                console.log(d)
+            },
+        })
+        console.log(dd)
+    </script>
+</body>
+
+</html>

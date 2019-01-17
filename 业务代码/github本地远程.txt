@@ -1,0 +1,40 @@
+$ git init
+
+初始化git
+
+$ ssh-keygen -t rsa -C "396857483@qq.com"
+
+设置本地ssh-key，一路回车就好；
+
+生成地址在C盘用户目录下的.ssh文件夹，打开带.pub文件，复制ssh-key；
+
+然后在github账号上添加这个ssh-key；
+
+$ ssh -T git@github.com
+
+测试连接github；
+
+$ git config --global user.name "sg"
+
+$ git config --global user.email "396857483@qq.com"
+
+连接成功设置本地账户名字和邮箱
+
+$ git push --set-upstream origin master
+
+设置本地提交的默认目录；
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

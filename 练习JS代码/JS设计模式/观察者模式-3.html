@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>观察者模式</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * 观察者模式又叫发布订阅模式（Publish/Subscribe），
+         * 它定义了一种一对多的关系，让多个观察者对象同时监听某一个主题对象，
+         * 这个主题对象的状态发生变化时就会通知所有的观察者对象，使得它们能够自动更新自己。
+         * 使用观察者模式的好处：
+         *  1.支持简单的广播通信，自动通知所有已经订阅过的对象。
+         *  2.页面载入后目标对象很容易与观察者存在一种动态关联，增加了灵活性。
+         *  3.目标对象与观察者之间的抽象耦合关系能够单独扩展以及重用。
+         */
+        // 让多个对象都具有观察者发布订阅的功能，
+        // 我们可以定义一个通用的函数，然后将该函数的功能应用到需要观察者功能的对象上
+        
+        var observer = {
+            // 订阅
+            addSubscriber: function (callback) {
+                this.subscribers.push(callback);
+            },
+            // 退订
+            removeSubscriber: function (callback) {
+                for (var i=0; i<this.subscribers.length; i++) {
+                    if (this.subscribers[i] === callback) {
+                        delete (this.subscribers[i])
+                        i--;
+                    }
+                }
+            },
+            // 订阅
+            publish: function (what) {
+                for (var i=0; i<this.subscribers.length; i++) {
+                    if (typeof this.subscribers[i] === 'function') {
+                        this.subscribers[i](what);
+                    }
+                }
+            },
+            // 将对象o具有观察者功能
+            make: function (o) {
+                for (var i in this) {
+                    o[i] = this[i];
+                    o.subscribers = [];
+                }
+            },
+        }
+        // 订阅2个对象
+        var blogger = {
+            recommend: function (id) {
+                var msg = 'dudu推荐了的帖子：' + id;
+                this.publish(msg)
+            }
+        }
+        var user = {
+            vote: function (id) {
+                var msg = '有人投票了！ID是' + id;
+                this.publish(msg)
+            }
+        }
+        observer.make(blogger)
+        observer.make(user)
+        // 测试
+        var tom = {
+            read: function (what) {
+                console.log('Tom看到了如下信息：' + what)
+            }
+        };
+
+        var mm = {
+            show: function (what) {
+                console.log('mm看到了如下信息：' + what)
+            }
+        };
+        // 订阅
+        blogger.addSubscriber(tom.read);
+        blogger.addSubscriber(mm.show);
+        blogger.recommend(123); //调用发布
+
+        //退订
+        blogger.removeSubscriber(mm.show);
+        blogger.recommend(456); //调用发布
+
+        //另外一个对象的订阅
+        user.addSubscriber(mm.show);
+        user.vote(789); //调用发布
+
+    </script>
+</body>
+
+</html>
