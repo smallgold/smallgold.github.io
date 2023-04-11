@@ -3,31 +3,175 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="theme-color" content="#98d">
-  <meta name="Description" content="pwa">
-  <title>pwa</title>
-  <link rel="manifest" href="./manifest.json">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    @font-face {
+      font-family: Montserrat;
+      src: url('./Montserrat.woff2');
+    }
+
+    body {
+      color: #333;
+      font-family: Montserrat;
+      font-size: 18px;
+      background-image: linear-gradient(to top left, #ffadad, #ffd6a5, #fdffb6, #caffbf, #9bf6ff, #a0c4ff, #bdb2ff);
+    }
+
+    h1 {
+      padding: 30px 0;
+    }
+
+    .project-container {
+      width: 960px;
+      margin: 0 auto;
+    }
+
+    .project-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 48px;
+      width: 100%;
+      padding-bottom: 48px;
+    }
+
+    .project-item {
+      position: relative;
+      width: 30%;
+      padding-top: 30%;
+      transform-style: preserve-3d;
+      perspective: 500px;
+    }
+
+
+    .flow-wave {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0,0,0, .3);
+      text-decoration: none;
+      transform-style: preserve-3d;
+    }
+
+    .flow-wave:hover {
+      background: radial-gradient(circle at 10px -7px, transparent 8px, currentColor 8px, currentColor 9px, transparent 9px) repeat-x,
+        radial-gradient(circle at 10px 27px, transparent 8px, currentColor 8px, currentColor 9px, transparent 9px) repeat-x;
+      background-size: 20px 20px;
+      background-position: 0 calc(100% + 16px), 0 calc(100% - 4px);
+      animation: waveFlow 1s infinite linear;
+    }
+
+    @keyframes waveFlow {
+      from {
+        background-position-x: -10px, 0;
+      }
+
+      to {
+        background-position-x: -30px, -20px;
+      }
+    }
+
+    .flow-wave img {
+      display: block;
+      width: 100%;
+    }
+
+
+
+  </style>
 </head>
 
 <body>
-  <h1>hello pwa</h1>
-  <p></p>
-  <script src="./test.js"></script>
-  <script>
-    if (navigator.serviceWorker != null) {
-      navigator.serviceWorker.register('./sw.js').then(function (registation) {
-        // 注册成功
-        console.log('ServiceWorker registation successful with scope: ', registation.scope);
+  <div class="project-container">
+    <h1>Portfolio</h1>
+    <div class="project-list">
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/denglu.png" alt="">
+        </a>
+      </div>
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/jianzhu.png" alt="">
+        </a>
+      </div>
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/lvse.png" alt="">
+        </a>
+      </div>
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/lvyou.png" alt="">
+        </a>
+      </div>
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/meizhuang.png" alt="">
+        </a>
+      </div>
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/wuliu.png" alt="">
+        </a>
+      </div>
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/xitong.png" alt="">
+        </a>
+      </div>
+      <div class="project-item">
+        <a class="flow-wave" href="">
+          <img src="./imgs/youxi.png" alt="">
+        </a>
+      </div>
+    </div>
+  </div>
 
-      }).catch(function (err) {
-        console.log('ServiceWorker registation failed: ', err);
-      });
-    } else {
-      console.log('未启动 ServiceWorker!')
+  <script>
+    window.onload = ()=>{
+      const multiple = 20;
+      const mouseOverContainer = document.querySelectorAll(".project-item");
+      const element = document.querySelectorAll(".flow-wave");
+
+      function transformElement(target, x, y) {
+        let box = target.getBoundingClientRect();
+        let calcX = -(y - box.y - (box.height / 2)) / multiple;
+        let calcY = (x - box.x - (box.width / 2)) / multiple;
+
+        target.style.transform = "rotateX(" + calcX + "deg) " + "rotateY(" + calcY + "deg)";
+      }
+
+      
+      for (let i =0; i<mouseOverContainer.length; i++){
+        const item = mouseOverContainer[i]
+        item.addEventListener('mousemove', (e)=>{
+          transformElement(element[i], e.clientX, e.clientY);
+        })
+        item.addEventListener('mouseleave', (e)=>{
+          element[i].style.transform = ''
+        })
+      }
+
+
+      // mouseOverContainer;
+      // mouseOverContainer.addEventListener('mouseleave', (e) => {
+      //   window.requestAnimationFrame(function () {
+      //     transformElement(e.clientX, e.clientY);
+      //   });
+      // });
     }
   </script>
+
 </body>
 
 </html>
