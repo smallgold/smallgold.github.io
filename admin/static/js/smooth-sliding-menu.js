@@ -1,0 +1,1 @@
+$(document).ready(function(){$(".menu-switch").on("click",function(t){t.preventDefault();$("#main").css("left");"menu-switch"==$(".menu-switch").attr("class")?($(this).addClass("open"),$("#main").animate({left:"100px"},"fast")):($(".menu-switch").removeClass("open"),$("#main").animate({left:"0"},"fast"))})});

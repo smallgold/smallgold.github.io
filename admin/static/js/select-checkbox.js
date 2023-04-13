@@ -1,0 +1,1 @@
+$(document).ready(function(){$("#select-all").click(function(c){this.checked?$(".checkbox1").each(function(){this.checked=!0}):$(".checkbox1").each(function(){this.checked=!1})})});
